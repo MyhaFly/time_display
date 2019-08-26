@@ -116,6 +116,7 @@ class MainForm(QMainWindow):
         self.orderTable = None
         self.coordsDict = {}
         self.rowCount = 0
+        self.blockNow = 0
         
         self.comConnector = ComConnector1C(CONSTANTS.path1c, CONSTANTS.isServer1c)
         
@@ -180,7 +181,8 @@ class MainForm(QMainWindow):
             bgAdresses = CONSTANTS.F_bgAdress9
             rowCount = CONSTANTS.N_rowCount9
             margin = CONSTANTS.N_rowMargin9
-                
+        
+        self.blockNow = rowCount  
         for rowId in range(rowCount):
             createBlocksRow(
                 self, 
@@ -300,7 +302,7 @@ class MainForm(QMainWindow):
         
         rowId: С какой строки зачищать старый тест
         """     
-        for _id in range(rowId, self.rowCount):
+        for _id in range(rowId, self.blockNow):
             for colId in range(CONSTANTS.N_colCount):
                 self.setTextInBlock(rowId, colId, "")
     
@@ -350,7 +352,7 @@ class MainForm(QMainWindow):
                 self.setTextStyle(rowId, CONSTANTS.D_designedRow)
                 
             last = rowId + 1
-            if self.rowCount != last:
+            if self.blockNow != last:
                 self.clearEmptyBlocks(last)
 
     @logger_dekorator(log, "startTimer", "Запуск таймера.")
